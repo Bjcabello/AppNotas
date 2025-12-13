@@ -1,3 +1,4 @@
+from usuarios import acciones
 print("""
 Acciones disponibles
       - registro
@@ -5,16 +6,13 @@ Acciones disponibles
 
 """)
 accion = input("¿Que quieres hacer?: ")
+realiza = acciones.Acciones()
 
 if accion == "registro":
-    print("Ok !! Vamos a registrarte en el sistema...")
-    nombre = input("¿Cual es tu nombre?: ")
-    apellidos = input("¿Cuales son tus apellidos?: ")
-    email = input("¿Ingresa tu email?: ")
-    password = input("¿Ingresa tu constraseña?: ")
-
+    realiza.registro()
 
 if accion == "login":
-    print("Identificate en el sistema...")
-    email = input("¿Ingresa tu email?: ")
-    password = input("¿Ingresa tu constraseña?: ")
+    realiza.login()
+    
+
+
