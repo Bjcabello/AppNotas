@@ -1,2 +1,2 @@
-1 instala py -m venv venv
-2 instala los drivers de pyodbc
+instala py -m venv venv
+instala los drivers de pyodbc
