@@ -1,3 +1,4 @@
+from database import conexion
 class Usuario:
 
     def __init__(self, nombre, apellido, email, password):
