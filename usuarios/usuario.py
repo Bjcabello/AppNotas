@@ -1,5 +1,6 @@
 from database import conexion
 import datetime
+import hashlib
 
 class Usuario:
 
@@ -11,13 +12,16 @@ class Usuario:
 
     def registrar(self):
         fecha = datetime.datetime.now()  
-
+        
+        hasheo = hashlib.sha256()
+        hasheo.update(self.password.encode('utf8'))
+        
         sql = """
         INSERT INTO usuarios (nombre, apellidos, email, password, fecha)
         VALUES (?, ?, ?, ?, ?)
         """
 
-        datos = (self.nombre, self.apellidos, self.email, self.password, fecha)
+        datos = (self.nombre, self.apellidos, self.email, hasheo.hexdigest(), fecha)
 
         connector = conexion()
         if connector is None:
