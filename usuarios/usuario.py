@@ -13,7 +13,6 @@ class Usuario:
 
     def registrar(self):
         fecha = datetime.datetime.now()
-
         password_hash = hashlib.sha256(
             self.password.encode('utf-8')
         ).hexdigest()
@@ -23,28 +22,21 @@ class Usuario:
         VALUES (?, ?, ?, ?, ?)
         """
 
-        datos = (
+        conn = conexion()
+        cursor = conn.cursor()
+        cursor.execute(sql, (
             self.nombre,
             self.apellidos,
             self.email,
             password_hash,
             fecha
-        )
-
-        conn = conexion()
-        if not conn:
-            return [0, self]
-
-        cursor = conn.cursor()
-        cursor.execute(sql, datos)
+        ))
         conn.commit()
-
-        resultado = [cursor.rowcount, self]
 
         cursor.close()
         conn.close()
 
-        return resultado
+        return [1, self]
 
     def identificar(self):
         password_hash = hashlib.sha256(
@@ -58,9 +50,6 @@ class Usuario:
         """
 
         conn = conexion()
-        if not conn:
-            return None
-
         cursor = conn.cursor()
         cursor.execute(sql, (self.email, password_hash))
         usuario = cursor.fetchone()
