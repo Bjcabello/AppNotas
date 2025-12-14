@@ -22,12 +22,16 @@ class Usuario:
         connector = conexion()
         if connector is None:
             return [0, self]
+        
+        try:
+            cursor = connector.cursor()
+            cursor.execute(sql, datos)
+            connector.commit()
+            result = [cursor.rowcount, self]
 
-        cursor = connector.cursor()
-        cursor.execute(sql, datos)
-        connector.commit()
-
-        return [cursor.rowcount, self]
+        except:
+            result = [0, self]
+        return result
 
 
     def identificar(self):
