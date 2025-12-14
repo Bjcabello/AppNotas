@@ -2,6 +2,9 @@ from database import conexion
 import datetime
 import hashlib
 
+connector = conexion()
+cursor = connector.cursor()
+
 class Usuario:
 
     def __init__(self, nombre, apellidos, email, password):
@@ -28,7 +31,6 @@ class Usuario:
             return [0, self]
         
         try:
-            cursor = connector.cursor()
             cursor.execute(sql, datos)
             connector.commit()
             result = [cursor.rowcount, self]
@@ -39,4 +41,14 @@ class Usuario:
 
 
     def identificar(self):
-        return self.nombre
+        sql = "SELECT * FROM usuarios WHERE email = ?  AND password = ?"
+        hasheo = hashlib.sha256()
+        hasheo.update(self.password.encode('utf8'))
+
+        datos = (self.email, hasheo.hexdigest())
+
+        cursor.execute(sql, datos)
+        result = cursor.fetchone()
+        return result
+
+

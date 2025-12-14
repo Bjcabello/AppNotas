@@ -18,5 +18,22 @@ class Acciones:
             print("\n No te has registrado correctamente")
     def login(self):
         print("Identificate en el sistema...")
-        email = input("¿Ingresa tu email?: ")
-        password = input("¿Ingresa tu constraseña?: ")
+
+        try:
+            email = input("¿Ingresa tu email?: ")
+            password = input("¿Ingresa tu constraseña?: ")
+
+            usuario = modelo.Usuario('', '', email, password)
+            login = usuario.identificar()
+
+            if email == login[1]:
+                print(f"Bienvenido {login[1]}, te has registrado en el sistema {login[5]}")
+                self.instruccion(login)
+        except Exception as e:
+            print(type(e))
+            print(type(e).__name__)
+            print(f"Login Incorrecto")
+
+    def instruccion(self, usuario):
+        return None
+        

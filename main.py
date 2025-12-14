@@ -3,7 +3,6 @@ print("""
 Acciones disponibles
       - registro
       - login
-
 """)
 accion = input("¿Que quieres hacer?: ")
 realiza = acciones.Acciones()
