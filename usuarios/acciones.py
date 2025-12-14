@@ -13,27 +13,49 @@ class Acciones:
         registro = usuario.registrar()
 
         if registro[0] >= 1:
-            print(f"\n Correcto {registro[1].nombre} te has registrado con el email {registro[1].email}")
+            print(f"\n Correcto {registro[1].nombre} {registro[1].apellidos} te has registrado con el correo {registro[1].email}")
         else:
             print("\n No te has registrado correctamente")
+
     def login(self):
-        print("Identificate en el sistema...")
+        print("Identifícate en el sistema...")
 
-        try:
-            email = input("¿Ingresa tu email?: ")
-            password = input("¿Ingresa tu constraseña?: ")
+        email = input("¿Ingresa tu email?: ")
+        password = input("¿Ingresa tu contraseña?: ")
 
-            usuario = modelo.Usuario('', '', email, password)
-            login = usuario.identificar()
+        usuario = modelo.Usuario('', '', email, password)
+        login = usuario.identificar()
 
-            if email == login[1]:
-                print(f"Bienvenido {login[1]}, te has registrado en el sistema {login[5]}")
-                self.instruccion(login)
-        except Exception as e:
-            print(type(e))
-            print(type(e).__name__)
-            print(f"Login Incorrecto")
+        if login:
+            print(f"Bienvenido {login[1]}, te registraste el {login[4]}")
+            self.instruccion(login)
+        else:
+            print("Email o contraseña incorrectos")
 
     def instruccion(self, usuario):
+        print("""
+        Acione Disponibles:
+        - Crear nota (crear)
+        - Mostrar tus notas (mostrar)
+        - Eliminar nota (Eliminar)
+        - Salir (salir)
+        """)
+
+        accion = input("¿Que quieres hacer?: ")
+
+        if accion == "crear":
+            print("Vamos a crear")
+            self.instruccion(usuario)
+
+        elif accion == "mostrar":
+            print("Vamos a mostrar")
+            self.instruccion(usuario)
+
+        elif accion == "eliminar":
+            print("Vamos a  eliminar")
+            self.instruccion(usuario)
+
+        elif accion == "salir":
+            exit()
         return None
         

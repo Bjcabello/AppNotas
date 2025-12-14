@@ -2,53 +2,70 @@ from database import conexion
 import datetime
 import hashlib
 
-connector = conexion()
-cursor = connector.cursor()
 
 class Usuario:
 
     def __init__(self, nombre, apellidos, email, password):
         self.nombre = nombre
         self.apellidos = apellidos
-        self.email = email 
+        self.email = email
         self.password = password
 
     def registrar(self):
-        fecha = datetime.datetime.now()  
-        
-        hasheo = hashlib.sha256()
-        hasheo.update(self.password.encode('utf8'))
-        
+        fecha = datetime.datetime.now()
+
+        password_hash = hashlib.sha256(
+            self.password.encode('utf-8')
+        ).hexdigest()
+
         sql = """
         INSERT INTO usuarios (nombre, apellidos, email, password, fecha)
         VALUES (?, ?, ?, ?, ?)
         """
 
-        datos = (self.nombre, self.apellidos, self.email, hasheo.hexdigest(), fecha)
+        datos = (
+            self.nombre,
+            self.apellidos,
+            self.email,
+            password_hash,
+            fecha
+        )
 
-        connector = conexion()
-        if connector is None:
+        conn = conexion()
+        if not conn:
             return [0, self]
-        
-        try:
-            cursor.execute(sql, datos)
-            connector.commit()
-            result = [cursor.rowcount, self]
 
-        except:
-            result = [0, self]
-        return result
+        cursor = conn.cursor()
+        cursor.execute(sql, datos)
+        conn.commit()
 
+        resultado = [cursor.rowcount, self]
+
+        cursor.close()
+        conn.close()
+
+        return resultado
 
     def identificar(self):
-        sql = "SELECT * FROM usuarios WHERE email = ?  AND password = ?"
-        hasheo = hashlib.sha256()
-        hasheo.update(self.password.encode('utf8'))
+        password_hash = hashlib.sha256(
+            self.password.encode('utf-8')
+        ).hexdigest()
 
-        datos = (self.email, hasheo.hexdigest())
+        sql = """
+        SELECT id, nombre, apellidos, email, fecha
+        FROM usuarios
+        WHERE email = ? AND password = ?
+        """
 
-        cursor.execute(sql, datos)
-        result = cursor.fetchone()
-        return result
+        conn = conexion()
+        if not conn:
+            return None
 
+        cursor = conn.cursor()
+        cursor.execute(sql, (self.email, password_hash))
+        usuario = cursor.fetchone()
 
+        cursor.close()
+        conn.close()
+
+        return usuario
