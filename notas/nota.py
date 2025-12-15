@@ -1,14 +1,13 @@
 from database import conexion
 
 class Nota:
-    def __init__(self, usuario_id, titulo, descripcion):
+    def __init__(self, usuario_id, titulo = "", descripcion =""):
         self.usuario_id = usuario_id
         self.titulo = titulo
         self.descripcion = descripcion
 
     def guardar(self):
-        conn = conexion()
-        cursor = conn.cursor()
+        
 
         sql = """
         INSERT INTO notas (usuario_id, titulo, descripcion, fecha)
@@ -16,6 +15,8 @@ class Nota:
         """
 
         datos = (self.usuario_id, self.titulo, self.descripcion)
+        conn = conexion()
+        cursor = conn.cursor() 
 
         cursor.execute(sql, datos)
         conn.commit()
@@ -26,3 +27,14 @@ class Nota:
         conn.close()
 
         return resultado
+    
+    def listar(self):
+        sql = f"SELECT * FROM notas WHERE usuario_id = {self.usuario_id}"
+
+        conn = conexion()
+        cursor = conn.cursor()
+
+        cursor.execute(sql)
+        result = cursor.fetchall()
+
+        return result

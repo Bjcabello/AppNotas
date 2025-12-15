@@ -52,7 +52,7 @@ class Acciones:
             self.instruccion(usuario)
         
         elif accion == "mostrar":
-            print("vamos a mostrar")
+            ingresa.mostrar(usuario)
             self.instruccion(usuario)
 
         elif accion == "eliminar":

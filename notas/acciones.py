@@ -16,4 +16,10 @@ class Acciones:
         else:
             print(f"\nNo se guardo la nota {usuario[1]}")
 
-    
+    def mostrar(self, usuario):
+        print(f"Ok {usuario[1]} !! Listado notas: ")
+
+        nota = Nota(usuario[0])
+        notas = nota.listar()
+
+        print(notas)
