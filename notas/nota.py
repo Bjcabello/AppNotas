@@ -2,20 +2,27 @@ from database import conexion
 
 class Nota:
     def __init__(self, usuario_id, titulo, descripcion):
-        self. usuario_id = usuario_id
+        self.usuario_id = usuario_id
         self.titulo = titulo
-        self.decripcion = descripcion
+        self.descripcion = descripcion
 
     def guardar(self):
+        conn = conexion()
+        cursor = conn.cursor()
 
-        connect = conexion()
-        cursor = connect.cursor()
-        sql = "INSERT INTO notas VALUES(null, ?, ?, ?, NOW())"
-        nota = (self.usuario_id, self.titulo, self.decripcion)
+        sql = """
+        INSERT INTO notas (usuario_id, titulo, descripcion, fecha)
+        VALUES (?, ?, ?, GETDATE())
+        """
 
-        cursor.execute(sql, nota)
-        cursor.commit()
+        datos = (self.usuario_id, self.titulo, self.descripcion)
 
-        return[cursor.rowcount, self]
+        cursor.execute(sql, datos)
+        conn.commit()
 
-        
+        resultado = [cursor.rowcount, self]
+
+        cursor.close()
+        conn.close()
+
+        return resultado

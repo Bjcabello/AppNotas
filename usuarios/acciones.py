@@ -1,4 +1,5 @@
 import usuarios.usuario as modelo
+import notas.acciones
 
 
 class Acciones:
@@ -29,7 +30,7 @@ class Acciones:
         login = usuario.identificar()
 
         if login:
-            print(f"\nBienvenido {login[1]}, registrado el {login[4]}")
+            print(f"\nBienvenido {login[1]} {login[2]}, registrado el {login[4]}")
             self.instruccion(login)
         else:
             print("\nEmail o contraseña incorrectos")
@@ -44,9 +45,10 @@ class Acciones:
         """)
 
         accion = input("¿Qué deseas hacer?: ")
+        ingresa = notas.acciones.Acciones()
 
         if accion == "crear":
-            print("vamos a crear")
+            ingresa.crear(usuario)
             self.instruccion(usuario)
         
         elif accion == "mostrar":
@@ -58,6 +60,6 @@ class Acciones:
             self.instruccion(usuario)
 
         elif accion == "salir":
-            print(f"usuario {usuario[1]}, Cerro sesion")
+            print(f"usuario {usuario[1]} {usuario[2]}, Cerro sesion")
             exit()
 

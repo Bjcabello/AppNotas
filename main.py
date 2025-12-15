@@ -1,11 +1,11 @@
-from usuarios import acciones
+from usuarios.acciones import Acciones
 print("""
 Acciones disponibles
       - registro
       - login
 """)
 accion = input("¿Que quieres hacer?: ")
-realiza = acciones.Acciones()
+realiza = Acciones()
 
 if accion == "registro":
     realiza.registro()
