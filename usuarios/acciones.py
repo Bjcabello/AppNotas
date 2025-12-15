@@ -58,5 +58,6 @@ class Acciones:
             self.instruccion(usuario)
 
         elif accion == "salir":
+            print(f"usuario {usuario[1]}, Cerro sesion")
             exit()
 
