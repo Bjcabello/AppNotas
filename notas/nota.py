@@ -38,3 +38,26 @@ class Nota:
         result = cursor.fetchall()
 
         return result
+    
+    def eliminar(self, titulo):
+        sql = """
+        DELETE FROM notas
+        WHERE usuario_id = ?
+        AND titulo LIKE ?
+        """
+
+        datos = (self.usuario_id, f"%{titulo}%")
+
+        conn = conexion()
+        cursor = conn.cursor()
+
+        cursor.execute(sql, datos)
+        conn.commit()
+
+        resultado = cursor.rowcount
+
+        cursor.close()
+        conn.close()
+
+        return resultado
+

@@ -45,18 +45,18 @@ class Acciones:
         """)
 
         accion = input("¿Qué deseas hacer?: ")
-        ingresa = notas.acciones.Acciones()
+        ejecuta= notas.acciones.Acciones()
 
         if accion == "crear":
-            ingresa.crear(usuario)
+            ejecuta.crear(usuario)
             self.instruccion(usuario)
         
         elif accion == "mostrar":
-            ingresa.mostrar(usuario)
+            ejecuta.mostrar(usuario)
             self.instruccion(usuario)
 
         elif accion == "eliminar":
-            print("vamos a eliminar")
+            ejecuta.borrar(usuario)
             self.instruccion(usuario)
 
         elif accion == "salir":
