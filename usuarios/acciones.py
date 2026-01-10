@@ -1,5 +1,15 @@
 import usuarios.usuario as modelo
 import notas.acciones
+import getpass
+import json
+
+# Prefer requests if available, otherwise fall back to urllib
+try:
+    import requests
+except ImportError:
+    requests = None
+    import urllib.request
+    import urllib.error
 
 
 class Acciones:
@@ -35,6 +45,56 @@ class Acciones:
         else:
             print("\nEmail o contraseña incorrectos")
 
+    def login_github(self):
+        """Log in using a GitHub Personal Access Token (PAT).
+
+        This method prompts (masked) for a PAT, verifies it with the GitHub API,
+        and, on success, creates a temporary user tuple compatible with the
+        existing instruction flow.
+        """
+        print("\nLogin with GitHub\n")
+
+        token = getpass.getpass("GitHub Personal Access Token: ")
+
+        if not token or not token.strip():
+            print("\nToken cannot be empty")
+            return
+
+        headers = {"Authorization": f"token {token}", "User-Agent": "AppNotas"}
+        user_data = None
+
+        if requests:
+            try:
+                resp = requests.get("https://api.github.com/user", headers=headers, timeout=10)
+                if resp.status_code == 200:
+                    user_data = resp.json()
+                else:
+                    print("\nInvalid token or GitHub API error")
+                    return
+            except requests.RequestException:
+                print("\nNetwork error contacting GitHub")
+                return
+        else:
+            req = urllib.request.Request("https://api.github.com/user", headers=headers)
+            try:
+                with urllib.request.urlopen(req, timeout=10) as resp:
+                    user_data = json.load(resp)
+            except urllib.error.HTTPError:
+                print("\nInvalid token or GitHub API error")
+                return
+            except Exception:
+                print("\nNetwork error contacting GitHub")
+                return
+
+        nombre = user_data.get("name") or user_data.get("login") or ""
+        apellidos = ""
+        email = user_data.get("email") or ""
+        fecha = "GitHub"
+
+        usuario = (user_data.get("id"), nombre, apellidos, email, fecha)
+        print(f"\nBienvenido {nombre} ({user_data.get('login')})\n")
+        self.instruccion(usuario)
+
     def instruccion(self, usuario):
         print("""
             Acciones disponibles:
@@ -56,7 +116,7 @@ class Acciones:
             self.instruccion(usuario)
 
         elif accion == "eliminar":
-            ejecuta.borrar(usuario)
+            ejecuta.borrar(usuario )
             self.instruccion(usuario)
 
         elif accion == "salir":
